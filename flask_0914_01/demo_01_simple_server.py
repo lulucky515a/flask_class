@@ -1,8 +1,10 @@
 from wsgiref.simple_server import make_server
 
+
 # 视图函数 view function
 def login():
     return [b"login"]
+
 
 def project():
     return [b'projects']
@@ -24,6 +26,7 @@ url_map = {
 #         return [b'projects']
 #     else:
 #         return [b'not found this page']
+
 
 def app(env, response):
     """flask / django application"""

@@ -8,12 +8,13 @@ app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 
 
-@app.route('/')#, methods=['POST'])
+@app.route('/', methods=['POST'])
 def hello_world():
     # 获取 请求当中 post， 数据
+    body_data = request.form
     # body_data = request.json
-    # print(body_data)
-    # print(body_data['username'])
+    print(body_data)
+    print(body_data['username'])
     return """
     <html>
         <p style="color:red"> hello world路上发士大夫</p>
@@ -61,3 +62,4 @@ def is_yuz(data):
 if __name__ == '__main__':
     app.run(debug=True)
     
+
