@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+{#    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">#}
+    <title>追光者-项目展示</title>
+</head>
+<body>
+    首页 联系我们
+
+
+    <h2>展示所有的项目</h2>
+{#    {{ session }}#}
+{#    {{ g }}#}
+{#    {{ get_flashed_message() }}#}
+
+{#    {{ config['DEBUG'] }}#}
+{#    {{ request.headers }}#}
+
+    {% for project in p %}
+{#        设置变量#}
+        {% set name= project.name %}
+        {% set tester = project.tester %}
+
+{#        {% if tester == 'yuz' %}#}
+        {% if tester is is_yuz %}
+{#            字符串#}
+{#            <p>{{ name | default('No name', true) }}</p>#}
+{#            <p>{{ 'hello' | capitalize }}</p>#}
+{#            <P>{{ 'XML' | lower }}</p>#}
+{#            <p>{{ ' hello  ' | trim }}</p>#}
+{#            数字#}
+{#            <p>{{ 12.8888 | round}}</p>#}
+{#            <p>{{ 12.8888 | round(2, 'floor') }}</p>#}
+{#            <p>{{ -12 | abs }}</p>#}
+{#            列表#}
+{#            <p>{{ [1,2,3,4,5] | first }}</p>#}
+{#            <p>{{ [1,2,3,4,5] | last }}</p>#}
+{#            <p>{{ [1,2,3,4,5] | length }}</p>#}
+{#            <p>{{ [1,2,3,4,5] | sum }}</p>#}
+{#            <P>{{ [3,2,1,5,4] | sort }}</p>#}
+{#            <p>{{ [1,2,3,4,5] | join(' | ') }}</p>#}
+{#            <p>{{ ['tom','bob','ada'] | upper }}</p>#}
+{#            <p>{{ ['tom'] | upper }}</p>#}
+{#            <p>{{ ['lucky'] | upper }}</p>#}
+{#            to_json#}
+{#            {{ user | tojson | safe(0.10) }}#}
+
+            <p>{{ name | upper }}  {{ project["tester"] }}  {{ project["created_at"] | dt_to_str }}</p>
+        {% endif %}
+
+    {% endfor %}
+
+</body>
+</html>
