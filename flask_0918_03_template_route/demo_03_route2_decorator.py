@@ -9,6 +9,9 @@ url_map = {}
 def add_url_rule(url, view_func):
     """添加路由，"""
     url_map[url] = view_func
+    # 可以使用url_map.setdefault()设置默认值
+    # 当url（key）存在就不会设置，如果不存在使用url设置
+    # url_map.setdefault(url, view_func)
 
 def route(url):
     """路由装饰器"""
