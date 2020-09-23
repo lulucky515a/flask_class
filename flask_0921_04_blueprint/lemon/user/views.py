@@ -33,3 +33,4 @@ def email(email):
         "email": f"{email}@hotmail.com",
         "count": 1
     }
+

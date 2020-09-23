@@ -1,7 +1,7 @@
 # 初始化 app 对象
 from flask import Flask
 
-from lemon import views
+from lemon import views, conf_module
 from lemon.user import user_bp
 
 app = Flask(__name__)
@@ -22,14 +22,14 @@ def register_blueprints(app: Flask):
     app.register_blueprint(user_bp)
 
 
-def create_app():
+def create_app(config=None):
     """初始化app的各项功能, 生成、组装 app 的工厂"""
+
+    if config:
+        app.config.from_object(conf_module.ProConfig)
+
     register_blueprints(app)
     register_view(app)
 
 
     return app
-
-
-
-
