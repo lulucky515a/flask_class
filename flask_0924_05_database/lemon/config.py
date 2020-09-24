@@ -16,7 +16,7 @@ class Config:
 
 
 class DevConfig(Config):
-    DEBUG = True
+    DEBUG = False
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_DATABASE_USER = r"sqlite://LemonPlatform.db"
     JWT_HEADER_TYPE = 'JWT'

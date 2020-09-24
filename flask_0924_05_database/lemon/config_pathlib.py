@@ -5,7 +5,7 @@ import pathlib
 class Config:
     DIR_PATH = pathlib.Path(__file__).resolve().parent
     ROOT_PATH = DIR_PATH.parent
-    PATH = ROOT_PATH / 'dev234.db'
+    PATH = ROOT_PATH / 'dev04-dj.db'
     # 数据库设置， URI
     # app.config['SQLALCHEMY_DATABASE_URI'] = r"sqlite:///C:\Users\muji\Desktop\SqlNotes.db"
     SQLALCHEMY_DATABASE_URI = f'sqlite:///{PATH}'

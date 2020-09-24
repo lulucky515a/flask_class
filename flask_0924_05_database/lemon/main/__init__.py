@@ -6,4 +6,4 @@
 # 文件IDE名称：PyCharm 
 
 
-from lemon.main.bluerpint import main_bp
+from lemon.main.views import main_bp

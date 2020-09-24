@@ -4,12 +4,12 @@
 # 当前登录名：LuckyLu
 # 创建日期：2020/9/24 10:42
 # 文件IDE名称：PyCharm
-
-
+from flask import request
 from flask.views import MethodView
 
 
 from lemon.main.bluerpint import main_bp
+from lemon.main.models import Projects
 
 """
 有问题
@@ -76,7 +76,19 @@ def projects_list():
 
 @main_bp.route('/projects/', methods=['POST'])
 def projects_create():
-    return {"result": "projects_create"}
+    # 创建 Project 对象，保存
+    # 生成 Project
+
+    req_data = request.json
+    # {"name": "", "tester": "", "programmer": ""}
+    project = Projects(**req_data)
+    # 把你要提交的需要存储的数据放到 session
+    # db.session.add(project)
+    # # 提交事务
+    # db.session.commit()
+    project.save()
+    return {'result': 1}
+    # return {"result": "projects_create"}
 
 
 @main_bp.route('/projects/names/', methods=['GET'])

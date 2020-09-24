@@ -5,13 +5,15 @@
 from lemon import create_app
 # from lemon import app
 
-from lemon import config
+from lemon import config, config_pathlib
 
-app = create_app()
+
+app = create_app(setting=config_pathlib.ProdConfig)
 
 print(app.url_map)
 print(app.config)
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(debug=config.DevConfig)
+    app.run()
+    # app.run(debug=config.Config.DEBUG)
+    # app.run(debug=config_pathlib.Config.DEBUG)

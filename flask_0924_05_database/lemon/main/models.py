@@ -4,7 +4,7 @@ from lemon.extensions import db
 
 class Projects(Base):
     """项目的结构。 字段保持一致。"""
-    name = db.Column(db.String(200), unique=True)
+    name = db.Column(db.String(200), unique=True, comment="用户名")
     leader = db.Column(db.String(50))
     tester = db.Column(db.String(50))
     programmer = db.Column(db.String(50))

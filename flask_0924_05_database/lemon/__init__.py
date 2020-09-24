@@ -1,7 +1,7 @@
 # 初始化 app 对象
 from flask import Flask
 
-from lemon import views, config
+from lemon import views, config, config_pathlib
 from lemon.extensions import db, migrate
 from lemon.user import user_bp
 from lemon.main import main_bp, views
@@ -33,11 +33,15 @@ def register_extensions(app: Flask):
     migrate.init_app(app, db=db)
 
 
-def create_app(config=None):
+def create_app(setting=None):
     """初始化app的各项功能, 生成、组装 app 的工厂"""
 
-    # if config:
-    #     app.config.from_object(config.DevConfig)
+    # if setting:
+    #     app.config.from_object(config_pathlib.DevConfig)
+    # else:
+    #     app.config.from_object(config_pathlib.ProdConfig)
+
+    app.config.from_object(config_pathlib.DevConfig) if config else app.config.from_object(config_pathlib.ProdConfig)
 
     register_blueprints(app)
     register_view(app)

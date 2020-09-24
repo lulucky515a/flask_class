@@ -1,8 +1,11 @@
 from lemon.user.blueprint import user_bp
+from lemon.user.models import User
 
 
 @user_bp.route('/login')
 def login():
+    # 查询所有的 User
+    print(User.query.all())
     return {
         "user_id": 2,
         "username": "lucky1",
