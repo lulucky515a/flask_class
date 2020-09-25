@@ -19,6 +19,7 @@ class Config:
 class DevConfig(Config):
     """开发环境"""
     DEBUG = True
+    SECRET_KEY = 'Dev Environment'
 
 
 class ProdConfig(Config):

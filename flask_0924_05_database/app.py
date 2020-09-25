@@ -8,7 +8,7 @@ from lemon import create_app
 from lemon import config, config_pathlib
 
 
-app = create_app(setting=config_pathlib.ProdConfig)
+app = create_app(setting=config_pathlib.DevConfig)
 
 print(app.url_map)
 print(app.config)
