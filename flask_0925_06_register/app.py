@@ -14,6 +14,6 @@ print(app.url_map)
 print(app.config)
 
 if __name__ == '__main__':
-    app.run(port=8000)
+    app.run(port=5000)
     # app.run(debug=config.Config.DEBUG)
     # app.run(debug=config_pathlib.Config.DEBUG)

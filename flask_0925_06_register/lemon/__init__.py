@@ -31,6 +31,13 @@ def register_extensions(app: Flask):
     """注册插件"""
     db.init_app(app)
     migrate.init_app(app, db=db)
+    # cors.init_app(app)
+    #
+    # @jwt.user_loader_callback_loader
+    # def user_loader_callback(identity):
+    #     user= User.query.filter_by(username=identity).first()
+    #     if user:
+    #         return user
 
 
 def create_app(setting=None):

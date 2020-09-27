@@ -60,7 +60,8 @@ def register():
     # return {
     #     "id": 4,
     #     "username": "lucky923",
-    #     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0LCJ1c2VybmFtZSI6Imx1Y2t5OTIzIiwiZXhwIjoxNjAwOTE0MjA0LCJlbWFpbCI6Imx1Y2t5OTIzQGhvdG1haWwuY29tIn0.e4ARMx_JmzCi0AT_tH7PYPZ5hcCgnBgfgJg3Sl89bSo"
+    #     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0LCJ1c2VybmFtZSI6Imx1Y2t5OTIzIiwiZXhwI
+    #     joxNjAwOTE0MjA0LCJlbWFpbCI6Imx1Y2t5OTIzQGhvdG1haWwuY29tIn0.e4ARMx_JmzCi0AT_tH7PYPZ5hcCgnBgfgJg3Sl89bSo"
     # }
 
 

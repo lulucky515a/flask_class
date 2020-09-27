@@ -19,21 +19,25 @@ class Projects(Base):
     desc = db.Column(db.String(200), comment="简要描述")
     # 关系
     interfaces = db.relationship("Interfaces", backref='project')
+    # debugtalks 一对一关系~
+    debugtalks = db.relationship("DebugTalks", backref='project')
 
 
 class Interfaces(Base):
     name = db.Column(db.String(200), unique=True, comment="接口名称")
     tester = db.Column(db.String(50), comment="测试人员")
+    # desc = models.CharField('简要描述', max_length=200, null=True, blank=True, help_text='简要描述')
     desc = db.Column(db.String(200), comment="简要描述")
 
     # 外键的形式 '表名.字段'
     # 外键，必须要是是唯一键，index, ===> 主键
-    # project = db.ForeignKey('project.Projects', on_delete=Projects.CASCADE, comment="所属项目")
+    # project = models.ForeignKey('projects.Projects', on_delete=models.CASCADE,
+    #                                 related_name='interfaces', help_text='所属项目')
     project_id = db.Column(db.ForeignKey("projects.id"), comment="所属项目")
 
 
 class Configures(Base):
-    name = db.Column(db.String(50), unique=True, comment="配置名称")
+    name = db.Column(db.String(50), comment="配置名称")
     # interfaces 外键关联 ??? on_delete=models.CASCADE
     #     interface = models.ForeignKey('interfaces.Interfaces',
     #                                   on_delete=models.CASCADE,
@@ -93,4 +97,4 @@ class Testsuits(Base):
     #                                 related_name='testsuits', help_text='所属项目')
     project_id = db.Column(db.ForeignKey("projects.id"), comment="所属项目")
 
-    include = db.Column(db.String(50), comment='包含的接口')
+    include = db.Column(db.Text, comment='包含的接口')
