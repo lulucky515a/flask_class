@@ -16,11 +16,11 @@ class Projects(Base):
     publish_app = db.Column(db.String(100), comment="发布应用")
     # blank null  只对序列化器做校验的时候有用，Projects() & Projects.objects.create() 不起作用
     # desc = models.CharField('简要描述', max_length=200, null=True, blank=True, default='', help_text='简要描述')
-    desc = db.Column(db.String(200), comment="简要描述")
+    desc = db.Column(db.String(200), default='', comment="简要描述")
     # 关系
     interfaces = db.relationship("Interfaces", backref='project')
     # debugtalks 一对一关系~
-    debugtalks = db.relationship("DebugTalks", backref='project')
+    debugtalks = db.relationship("DebugTalks", uselist=False, backref='project')
 
 
 class Interfaces(Base):

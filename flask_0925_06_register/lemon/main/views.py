@@ -76,14 +76,15 @@ class ProjectView(MethodView):
 
 @main_bp.route('/envs/', methods=['GET'])
 def envs_list():
-    return {"result": "envs_list"}
+    envs = Envs.query.all()
+
+    # 序列化 projects ==> json
+    return {"result": [env.name for env in envs]}
+    # return {"result": "envs_list"}
 
 
 @main_bp.route('/envs/', methods=['POST'])
 def envs_create():
-    # 创建 Project 对象，保存
-    # 生成 Project
-
     req_data = request.json
     # {"name": "", "tester": "", "programmer": ""}
     envs = Envs(**req_data)
@@ -92,8 +93,7 @@ def envs_create():
     # # 提交事务
     # db.session.commit()
     envs.save()
-    return {'result': 1}
-    # return {"result": "projects_create"}
+    return {'result': envs.name}
 
 
 @main_bp.route('/envs/names/', methods=['GET'])
