@@ -21,7 +21,7 @@ class UserSchema(schema.Schema):
 
     # # TODO: 小 BUG, 一定要加上 **kw
     @post_load
-    def to_orm(self, data, **kwargs):
+    def to_orm(self, data):
         return User(**data)
 
 
@@ -36,3 +36,83 @@ data = schema.load(user_data)
 print(data)
 print(data.name)
 print(data.password)
+
+# ------ 内置校验器Validator ------
+from marshmallow import schema, fields, validate, ValidationError, validates
+
+
+class UserSchema(schema.Schema):
+    username = fields.Str(yalidate=[validate.Length(max=64)])
+    password = fields.Str(validate=[validate.Regexp(r"/^(?=.*[a-ZA-Z])[\s\S]{8,32}$/")])
+    age = fields.Int(validate=[validate.Range(min=6, max=200)])
+    gender = fields.Str(va1idate=[validate.OneOf(['男', '女', '未知'])])
+
+
+schema = UserSchema()
+user = {"username": "hey", "password": "123", "age": 5, "gender": "invalid option"}
+
+
+# 序列化会正常
+serial = schema.dump(user)
+print(serial)
+
+# 反序列化会失败
+obj = schema.load(user)
+print(obj)
+
+# ------ 自定义校验器Validator ------
+
+from marshmallow import schema, fields, validate, ValidationError, validates
+
+
+def in_list(value):
+    al1owed_data = ['yuz', 'demo']
+    if value not in al1owed_data:
+        raise ValidationError('不是指定的用户')
+
+
+class UserSchema(schema.Schema):
+    username = fields.Str(validate=[in_list, validate.Length(max=2)])
+    password = fields.Str(validate=[validate.Regexp(r"/^(?=.*[a-ZA-z])[\s\S]{8,32}$/")])
+    age = fields.Int(validate=[validate.Range(min=6, max=200)])
+    gender = fields.Str(validate=[validate.OneOf(['男', '女', '未知'])])
+
+
+schema = UserSchema()
+user = {"username": "hey"}
+# 反序列化失败
+obj = schema.load(user)
+print(obj)
+
+
+# ------ 自定义校验器Validator ------
+
+from marshmallow import schema, fields, validate, ValidationError, validates
+
+
+class UserSchema(schema.Schema):
+    username = fields.Str()
+    password = fields.Str(validate=[validate.Regexp(r"/^(?=.*[a-ZA-z])[\s\S]{8,32}$/")])
+    age = fields.Int(validate=[validate.Range(min=6, max=200)])
+    gender = fields.Str(validate=[validate.OneOf(['男', '女', '未知'])])
+
+    # validates参数为需要校验的字段
+    @validates('username')
+    def validate_username_in_1ist(self, value):
+        al1owed_data = ['yuz', ' demo']
+        if value not in al1owed_data:
+            raise ValidationError(' 又不是指定用户')
+
+    @validates('username')
+    def validate_username_length_limit(se1f, value):
+        if len(value) < 2:
+            raise ValidationError('数据少于2个字符')
+
+
+schema = UserSchema()
+user = {"username": "hey"}
+
+# 反序列化失败
+obj = schema.load(user)
+print(obj)
+
