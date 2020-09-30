@@ -9,6 +9,7 @@ from flask import request
 from flask.views import MethodView
 from flask_jwt_extended import jwt_required, get_jwt_identity, current_user
 from sqlalchemy.orm import Query
+from flask.json import jsonify
 
 from lemon.main.bluerpint import main_bp
 from lemon.main.models import Projects, Interfaces, Configures, DebugTalks, Envs, Reports, Summary, Testcases, Testsuits
@@ -142,7 +143,9 @@ def projects_list():
 
 
     # 序列化 projects ==> json
-    return {"results": [project.id for project in projects]}
+    return jsonify(projects)
+
+    # return {"results": [project.id for project in projects]}
 
 
 @main_bp.route('/projects/', methods=['POST'])

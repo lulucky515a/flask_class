@@ -66,8 +66,8 @@ from marshmallow import schema, fields, validate, ValidationError, validates
 
 
 def in_list(value):
-    al1owed_data = ['yuz', 'demo']
-    if value not in al1owed_data:
+    allowed_data = ['yuz', 'demo']
+    if value not in allowed_data:
         raise ValidationError('不是指定的用户')
 
 
@@ -98,9 +98,9 @@ class UserSchema(schema.Schema):
 
     # validates参数为需要校验的字段
     @validates('username')
-    def validate_username_in_1ist(self, value):
-        al1owed_data = ['yuz', ' demo']
-        if value not in al1owed_data:
+    def validate_username_in_list(self, value):
+        allowed_data = ['yuz', ' demo']
+        if value not in allowed_data:
             raise ValidationError(' 又不是指定用户')
 
     @validates('username')
