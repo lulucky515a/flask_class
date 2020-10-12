@@ -66,5 +66,5 @@ def create_app(setting=None):
     register_blueprints(app)
     register_view(app)
     register_extensions(app)
-
+    register_error(app)
     return app

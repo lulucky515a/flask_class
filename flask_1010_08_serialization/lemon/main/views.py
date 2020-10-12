@@ -5,7 +5,7 @@
 # 创建日期：2020/9/24 10:42
 # 文件IDE名称：PyCharm
 
-from flask import request
+from flask import request, abort
 from flask.views import MethodView
 from flask_jwt_extended import jwt_required, get_jwt_identity, current_user
 from sqlalchemy.orm import Query
@@ -81,7 +81,7 @@ def hello():
     class A:
         pass
     a = A()
-    # 1 / 0
+    1 / 0
     # ORM 对象
     # project/1 ==> {}
     return a
@@ -197,7 +197,7 @@ def projects_create():
 @main_bp.route('/projects/', methods=['POST'])
 # @jwt_required
 def projects_create():
-    # abort(404)
+    abort(404)
     # 从客户端接收数据
     req_data = request.json
     # 初始化序列化器
