@@ -13,6 +13,8 @@ from flask.json import jsonify
 
 from lemon.main.bluerpint import main_bp
 from lemon.main.models import Projects, Interfaces, Configures, DebugTalks, Envs, Reports, Summary, Testcases, Testsuits
+from lemon.main import serialization as se
+
 
 """
 有问题
@@ -79,7 +81,7 @@ def hello():
     class A:
         pass
     a = A()
-    1 / 0
+    # 1 / 0
     # ORM 对象
     # project/1 ==> {}
     return a
@@ -133,8 +135,8 @@ def envs_delete(id):
     return {"envs_delete": f"{id}"}
 
 
-# ------ projects ------
-
+# ------ 手工处理接收的数据 ------
+"""
 @main_bp.route('/projects/', methods=['GET'])
 @jwt_required
 def projects_list():
@@ -151,13 +153,29 @@ def projects_list():
     # Projects.query.filter_by(name='自动化测试平台项目').all()
     projects = Projects.query.all()
 
+    print(projects)
 
     # 序列化 projects ==> json
-    return jsonify(projects)
+    # return jsonify(projects)
+
+    return {"result": [project.to_json() for project in projects]}
 
     # return {"results": [project.id for project in projects]}
+"""
+
+# ------ 使用marshmallow序列化输出的数据 ------
+@main_bp.route('/projects/', methods=['GET'])
+@jwt_required
+def projects_list():
+    # 列表
+    projects = Projects.query.all()
+    schema = se.ProjectsSchema(many=True, exclude=['created_at', 'updated_at'])
+    projects_json = schema.dump(projects)
+    return {"result": projects_json}
 
 
+# ------ 手工处理接收的数据 ------
+"""
 @main_bp.route('/projects/', methods=['POST'])
 def projects_create():
     # 创建 Project 对象，保存
@@ -173,6 +191,21 @@ def projects_create():
     project.save()
     return {'result': project.id}
     # return {"result": "projects_create"}
+"""
+
+# ------ 使用marshmallow反序列化接收的数据 ------
+@main_bp.route('/projects/', methods=['POST'])
+# @jwt_required
+def projects_create():
+    # abort(404)
+    # 从客户端接收数据
+    req_data = request.json
+    # 初始化序列化器
+    schema = se.ProjectsSchema()
+    # 反序列化, 还是一个字典（校验的过程）
+    project = schema.load(req_data)
+    # return project
+    return {"result": "project1"}
 
 
 @main_bp.route('/projects/names/', methods=['GET'])
