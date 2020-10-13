@@ -86,19 +86,24 @@ def hello():
     # project/1 ==> {}
     return a
 
-# ------ envs ------
 
+# ------ envs ------
 @main_bp.route('/envs/', methods=['GET'])
 def envs_list():
-    envs = Envs.query.all()
+    envs_obj = Envs.query.all()
 
     # 序列化 projects ==> json
-    return {"result": [env.name for env in envs]}
-    # return {"result": "envs_list"}
+    schema = se.EnvsSchema(many=True, exclude=['status', 'updated_at'])
+    envs_json = schema.dump(envs_obj)
+    return {"results": envs_json}
+
+    # return {"result": [env.name for env in envs_obj]}
 
 
 @main_bp.route('/envs/', methods=['POST'])
 def envs_create():
+    """
+    # ------ 手动获取数据进行处理 ------
     req_data = request.json
     # {"name": "", "tester": "", "programmer": ""}
     envs = Envs(**req_data)
@@ -108,16 +113,38 @@ def envs_create():
     # db.session.commit()
     envs.save()
     return {'result': envs.name}
+    """
+
+    # 从客户端接收数据
+    req_data = request.json
+    # 初始化序列化器
+    schema = se.EnvsSchema()
+    # 反序列化, 还是一个字典（校验的过程）
+    env = schema.load(req_data)
+    # return project
+    # return {"result": "project1"}
+    # 序列化输出
+    schema_out = se.EnvsSchema(exclude=['status', 'updated_at'])
+    env_json = schema_out.dump(env)
+    return jsonify(env_json)
 
 
 @main_bp.route('/envs/names/', methods=['GET'])
 def envs_names():
-    return {"result": "envs_names"}
+    envs = Envs.query.all()
+    schema = se.EnvsSchema(many=True, only=['id', 'name'])
+    envs_json = schema.dump(envs)
+    return jsonify(envs_json)
 
 
 @main_bp.route('/envs/<id>/', methods=['GET'])
 def envs_read(id):
-    return {"envs_read": f"{id}"}
+    env = Envs.query.get(id)
+    schema = se.EnvsSchema(exclude=['status', 'updated_at'])
+    env_json = schema.dump(env)
+
+    # 序列化 projects ==> json
+    return jsonify(env_json)
 
 
 @main_bp.route('/envs/<id>/', methods=['PUT'])
@@ -169,9 +196,9 @@ def projects_list():
 def projects_list():
     # 列表
     projects = Projects.query.all()
-    schema = se.ProjectsSchema(many=True, exclude=['created_at', 'updated_at'])
+    schema = se.ProjectsSchema(many=True, exclude=['status', 'updated_at'])
     projects_json = schema.dump(projects)
-    return {"result": projects_json}
+    return {"results": projects_json}
 
 
 # ------ 手工处理接收的数据 ------
@@ -197,7 +224,7 @@ def projects_create():
 @main_bp.route('/projects/', methods=['POST'])
 # @jwt_required
 def projects_create():
-    abort(404)
+    # abort(404)
     # 从客户端接收数据
     req_data = request.json
     # 初始化序列化器
@@ -205,20 +232,33 @@ def projects_create():
     # 反序列化, 还是一个字典（校验的过程）
     project = schema.load(req_data)
     # return project
-    return {"result": "project1"}
+    # return {"result": "project1"}
+    # 序列化输出
+    schema_out = se.ProjectsSchema(exclude=['status', 'updated_at'])
+    projects_json = schema_out.dump(project)
+    return projects_json
 
 
 @main_bp.route('/projects/names/', methods=['GET'])
 def projects_names():
     projects = Projects.query.all()
+    schema = se.ProjectsSchema(many=True, only=['id', 'name'])
+    projects_json = schema.dump(projects)
 
     # 序列化 projects ==> json
-    return {"result": [project.name for project in projects]}
+    # return {"result": [project.name for project in projects]}
+    return jsonify(projects_json)
 
 
 @main_bp.route('/projects/<id>/', methods=['GET'])
 def projects_read(id):
-    return {"projects_read": f"{id}"}
+    project = Projects.query.get(id)
+    schema = se.ProjectsSchema(exclude=['status', 'updated_at'])
+    project_json = schema.dump(project)
+
+    # 序列化 projects ==> json
+    # return {"result": [project.name for project in projects]}
+    return jsonify(project_json)
 
 
 @main_bp.route('/projects/<id>/', methods=['PUT'])
@@ -244,10 +284,20 @@ def projects_interfaces(number):
     # print(username)
     # user = User.query.filter_by(username=username).first()
 
+    # ------ 手工处理接收的数据 ------
+    """
     projects = Projects.query.all()
 
     # 序列化 projects ==> json
-    return {"projects_interfaces": [project.interfaces for project in projects]}
+    return {"projects_interfaces": [project.interfaces for project in projects]}   
+    """
+
+    project = Projects.query.get(number)
+    interfaces = project.interfaces
+    schema = se.InterfacesSchema(many=True, only=['id', 'name'])
+    interfaces_json = schema.dump(interfaces)
+
+    return jsonify(interfaces_json)
 
 
 @main_bp.route('/projects/<id>/run/', methods=['POST'])
@@ -255,15 +305,20 @@ def projects_run(id):
     return {"projects_run": f"{id}"}
 
 
-# ------ interfaces ------
+# ------ interfaces,需要pop project name（没有这个方法） ------
 
 @main_bp.route('/interfaces/', methods=['GET'])
 def interfaces_list():
-    return {"result": "interfaces_list"}
+    interfaces = Interfaces.query.all()
+    schema = se.InterfacesSchema(many=True, exclude=['status', 'updated_at'])
+    interfaces_json = schema.dump(interfaces)
+    return {"results": interfaces_json}
 
 
 @main_bp.route('/interfaces/', methods=['POST'])
 def interfaces_create():
+    """
+    # ------ 手动获取数据进行处理 ------
     req_data = request.json
     # {"name": "", "tester": "", "programmer": ""}
     interface = Interfaces(**req_data)
@@ -273,7 +328,23 @@ def interfaces_create():
     # db.session.commit()
     interface.save()
     return {'result': interface.name}
-    # return {"result": "projects_create"}
+    """
+
+    # 从客户端接收数据
+    req_data = request.json
+    # 初始化序列化器
+    schema = se.InterfacesSchema()
+    # 反序列化, 还是一个字典（校验的过程）
+    interface = schema.load(req_data)
+
+    # project_info = interface.pop("project")
+    # interface.setdefault("project_id", project_info["pid"])
+    # # AttributeError: 'Interfaces' object has no attribute 'pop'
+
+    # 序列化输出
+    schema_out = se.InterfacesSchema(exclude=['status', 'updated_at'])
+    interfaces_json = schema_out.dump(interface)
+    return interfaces_json
 
 
 @main_bp.route('/interfaces/names/', methods=['GET'])
@@ -283,7 +354,11 @@ def interfaces_names():
 
 @main_bp.route('/interfaces/<id>/', methods=['GET'])
 def interfaces_read(id):
-    return {"interfaces_read": f"{id}"}
+    interface = Interfaces.query.get(id)
+    schema = se.InterfacesSchema(exclude=['status', 'updated_at'])
+    interface_json = schema.dump(interface)
+
+    return jsonify(interface_json)
 
 
 @main_bp.route('/interfaces/<id>/', methods=['PUT'])
@@ -303,7 +378,12 @@ def interfaces_delete(id):
 
 @main_bp.route('/interfaces/<id>/configs/', methods=['GET'])
 def interfaces_configs(id):
-    return {"interfaces_configs": f"{id}"}
+    interface = Interfaces.query.get(id)
+    configs = interface.configs
+    schema = se.ConfiguresSchema(many=True, only=['id', 'name'])
+    Configs_json = schema.dump(configs)
+
+    return jsonify(Configs_json)
 
 
 @main_bp.route('/interfaces/<id>/run/', methods=['POST'])
@@ -415,14 +495,16 @@ def summary_list():
 
 @main_bp.route('/testcases/', methods=['GET'])
 def testcases_list():
-    return {"result": "testcases_list"}
+    testcases = Testcases.query.all()
+    schema = se.TestcasesSchema(many=True, exclude=['status', 'updated_at'])
+    testcases_json = schema.dump(testcases)
+    return {"results": testcases_json}
 
 
 @main_bp.route('/testcases/', methods=['POST'])
 def testcases_create():
-    # 创建 Project 对象，保存
-    # 生成 Project
-
+    """
+    # ------ 手动获取数据进行处理 ------
     req_data = request.json
     # {"name": "", "tester": "", "programmer": ""}
     testcases = Testcases(**req_data)
@@ -433,6 +515,19 @@ def testcases_create():
     testcases.save()
     return {'result': 1}
     # return {"result": "projects_create"}
+    """
+
+    # 从客户端接收数据
+    req_data = request.json
+    # 初始化序列化器
+    schema = se.TestcasesSchema()
+    # 反序列化, 还是一个字典（校验的过程）
+    testcase = schema.load(req_data)
+
+    # 序列化输出
+    schema_out = se.TestcasesSchema(exclude=['status', 'updated_at'])
+    testcase_json = schema_out.dump(testcase)
+    return testcase_json
 
 
 @main_bp.route('/testcases/<id>/', methods=['GET'])

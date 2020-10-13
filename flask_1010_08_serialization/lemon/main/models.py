@@ -46,6 +46,9 @@ class Interfaces(Base):
     #                                 related_name='interfaces', help_text='所属项目')
     project_id = db.Column(db.ForeignKey("projects.id"), comment="所属项目")
 
+    testcases = db.relationship("Testcases", backref='interface')
+    configs = db.relationship("Configures", backref='interface')
+
 
 class Configures(Base):
     name = db.Column(db.String(50), comment="配置名称")

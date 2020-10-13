@@ -14,6 +14,20 @@ class EnvsSchema(ma.SQLAlchemyAutoSchema):
         # 是否包含外键
         include_fk = True
 
+    name = fields.String()
+
+    @validates("name")
+    def unique(self, data):
+        env = models.Envs.query.filter_by(name=data).first()
+        if env:
+            raise ValidationError('env name must be unique')
+
+    @post_load
+    def to_orm(self, json, **kw):
+        env = models.Envs(**json)
+        env.save()
+        return env
+
 
 class ProjectsSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -39,6 +53,20 @@ class InterfacesSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = models.Interfaces
         include_fk = True
+
+    name = fields.String()
+
+    @validates("name")
+    def unique(self, data):
+        interface = models.Interfaces.query.filter_by(name=data).first()
+        if interface:
+            raise ValidationError('interface name must be unique')
+
+    @post_load
+    def to_orm(self, json, **kw):
+        interface = models.Interfaces(**json)
+        interface.save()
+        return interface
 
 
 class ConfiguresSchema(ma.SQLAlchemyAutoSchema):
