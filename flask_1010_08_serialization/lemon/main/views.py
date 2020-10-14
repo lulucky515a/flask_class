@@ -519,6 +519,11 @@ def testcases_create():
 
     # 从客户端接收数据
     req_data = request.json
+
+    # 获取interface_id
+    interface_info = req_data.pop("interface")
+    req_data.setdefault('interface_id', interface_info['iid'])
+    
     # 初始化序列化器
     schema = se.TestcasesSchema()
     # 反序列化, 还是一个字典（校验的过程）
